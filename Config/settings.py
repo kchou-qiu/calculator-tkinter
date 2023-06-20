@@ -1,0 +1,11 @@
+# window
+APP_TITLE = "Calculator"
+WINDOW_WIDTH = 400
+WINDOW_HEIGHT = 600
+WINDOW_COLOR = "#202020"
+
+GRID_ROWS = 7
+GRID_COLS = 4
+
+
+
