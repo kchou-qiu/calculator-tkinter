@@ -2,9 +2,8 @@ import customtkinter as ctk
 
 
 class OutputWidget(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent: ctk.CTk) -> None:
         super().__init__(parent)
 
-        self.output = ctk.CTkLabel(self, text="Results", fg_color="#0000FF")
-        self.output.pack(expand=True, fill="both")
-        self.grid(row=1, column=0, columnspan=4, sticky="E")
+        self.label = ctk.CTkLabel(self, text="OUTPUT", fg_color="#00ff00")
+        self.label.pack(expand=True, fill="both")

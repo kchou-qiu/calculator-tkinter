@@ -2,9 +2,8 @@ import customtkinter as ctk
 
 
 class EquationWidget(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent: ctk.CTk) -> None:
         super().__init__(parent)
 
-        self.equation_label = ctk.CTkLabel(self, text="Equation", fg_color="#FF0000")
-        self.equation_label.pack(expand=True, fill="both")
-        self.grid(row=0, column=0, columnspan=4, sticky="SE")
+        self.label = ctk.CTkLabel(self, text="EQUATION", fg_color="#ff0000")
+        self.label.pack(expand=True, fill="both")
