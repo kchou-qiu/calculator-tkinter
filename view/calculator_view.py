@@ -1,11 +1,13 @@
 import customtkinter as ctk
-from config.settings import *
-from widgets import *
+from view.display_widget import EquationDisplayWidget, ResultsDisplayWidget
+from view.keypad_widget import KeypadWidget
+from assets.styling import *
+from assets.config import *
 
 
-class Calculator(ctk.CTk):
+class CalculatorView(ctk.CTk):
     def __init__(self):
-        super().__init__(fg_color=WINDOW_COLOR)
+        super().__init__(fg_color=COLORS["dark-gray"])
 
         self.result = ctk.StringVar(value="0")
         self.equation = ctk.StringVar(value="")
@@ -16,15 +18,10 @@ class Calculator(ctk.CTk):
                       f"+{(self.winfo_screenwidth() - WINDOW_WIDTH) // 2}"
                       f"+{(self.winfo_screenheight() - WINDOW_HEIGHT) // 2}")
 
-        self.equation_display = equation_widget.EquationWidget(self)
-        self.output_display = output_widget.OutputWidget(self)
-        self.keypad = keypad_widget.KeypadWidget(self)
+        self.equation_display = EquationDisplayWidget(self)
+        self.results_display = ResultsDisplayWidget(self)
+        self.keypad = KeypadWidget(self)
 
         self.equation_display.place(x=0, y=0, relwidth=1, relheight=0.15)
-        self.output_display.place(x=0, rely=0.15, relwidth=1, relheight=0.15)
+        self.results_display.place(x=0, rely=0.15, relwidth=1, relheight=0.15)
         self.keypad.place(x=0, rely=0.3, relwidth=1, relheight=0.7)
-
-
-if __name__ == "__main__":
-    app = Calculator()
-    app.mainloop()
