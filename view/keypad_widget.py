@@ -1,6 +1,5 @@
 import customtkinter as ctk
 from typing import Callable
-from assets.config import *
 
 
 class KeypadButton(ctk.CTkButton):
@@ -15,31 +14,12 @@ class KeypadButton(ctk.CTkButton):
 
 
 class KeypadWidget(ctk.CTkFrame):
-    def __init__(self, parent: ctk.CTk) -> None:
+    def __init__(self, parent: ctk.CTk, max_rows: int, max_columns: int) -> None:
         super().__init__(parent)
 
-        self.equation = ""
-        self.numbers = []
-
         # grid layout
-        for i in range(KEY_ROWS):
+        for i in range(max_rows):
             self.rowconfigure(i, weight=1, uniform="a")
 
-        for j in range(KEY_COLS):
+        for j in range(max_columns):
             self.columnconfigure(j, weight=1, uniform="a")
-
-        for number, data in NUMBER_BUTTONS.items():
-            KeypadButton(self,
-                         text=str(number),
-                         command=lambda: self.number_press(number),
-                         row=data["row"], column=data["column"],
-                         columnspan=data["columnspan"])
-
-        for operator, data in OPERATOR_BUTTONS.items():
-            KeypadButton(self, row=data["row"], column=data["column"], columnspan=data["columnspan"])
-
-        for special, data in SPECIAL_BUTTONS.items():
-            KeypadButton(self, row=data["row"], column=data["column"], columnspan=data["columnspan"])
-
-    def number_press(self, value):
-        print(value)
