@@ -13,11 +13,14 @@ class CalculatorModel:
     def percent(self):
         print("percent")
 
+    def decimal(self):
+        print("decimal")
+
     def add_number(self, number: str) -> None:
         print(number)
 
     def add_operator(self, operator: str) -> None:
         print(operator)
 
-    def evaluate_expression(self) -> None:
+    def evaluate(self) -> None:
         print("evalulate!")

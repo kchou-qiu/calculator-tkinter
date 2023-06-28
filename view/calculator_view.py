@@ -2,25 +2,27 @@ from typing import Callable
 
 import customtkinter as ctk
 
-from view.display_widget import EquationDisplayWidget, ResultsDisplayWidget
+from view.display_widget import DisplayWidget
 from view.keypad_widget import KeypadWidget, KeypadButton
 from assets.styling import *
 from assets.config import *
 
 
 class CalculatorView(ctk.CTk):
-    def __init__(self,
-                 on_number: Callable[[str], None],
-                 on_operator: Callable[[str], None],
-                 on_clear: Callable[[], None],
-                 on_invert: Callable[[], None],
-                 on_percent: Callable[[], None],
-                 on_evaluate: Callable[[], None]):
+    def __init__(self):
         super().__init__(fg_color=COLORS["dark-gray"])
+        self._buttons = {}
 
-        self.result = ctk.StringVar(value="0")
-        self.equation = ctk.StringVar(value="")
+        # display widgets
+        self._equation_widget = DisplayWidget(self, "se", ctk.CTkFont(family=FONT_FAMILY, size=FONT_SIZE_DISPLAY_EQUATION))
+        self._results_widget = DisplayWidget(self, "e", ctk.CTkFont(family=FONT_FAMILY, size=FONT_SIZE_DISPLAY_RESULTS))
+        self._keypad_widget = KeypadWidget(self, KEY_ROWS, KEY_COLS)
 
+        # UI
+        self._create_ui()
+        self._create_buttons(self._keypad_widget)
+
+    def _create_ui(self) -> None:
         # window setup
         self.title(APP_TITLE)
         self.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}"
@@ -28,59 +30,41 @@ class CalculatorView(ctk.CTk):
                       f"+{(self.winfo_screenheight() - WINDOW_HEIGHT) // 2}")
         self.resizable(False, False)
 
-        self.equation_display = EquationDisplayWidget(self)
-        self.results_display = ResultsDisplayWidget(self)
-        self.keypad = KeypadWidget(self, KEY_ROWS, KEY_COLS)
+        # master ui layout
+        self._equation_widget.place(x=0, y=0, relwidth=1, relheight=0.15)
+        self._results_widget.place(x=0, rely=0.15, relwidth=1, relheight=0.15)
+        self._keypad_widget.place(x=0, rely=0.3, relwidth=1, relheight=0.7)
 
-        # number buttons
-        for number, data in NUMBER_BUTTONS.items():
-            KeypadButton(self.keypad,
-                         text=number,
-                         command=lambda x=number: on_number(x),
-                         row=data["row"], column=data["column"],
-                         columnspan=data["columnspan"])
+    def _create_buttons(self, parent: ctk.CTkFrame) -> None:
+        self._buttons.update({
+            name: KeypadButton(parent, data["text"], data["value"], data["row"], data["column"], data["columnspan"])
+            for name, data in NUMBER_BUTTONS.items()
+        })
 
-        # operator buttons
-        for operator, data in OPERATOR_BUTTONS.items():
-            KeypadButton(self.keypad,
-                         text=operator,
-                         command=lambda x=operator: on_operator(x),
-                         row=data["row"],
-                         column=data["column"],
-                         columnspan=data["columnspan"])
+        self._buttons.update({
+            name: KeypadButton(parent, data["text"], data["value"], data["row"], data["column"], data["columnspan"])
+            for name, data in OPERATOR_BUTTONS.items()
+        })
 
-        # clear button
-        KeypadButton(self.keypad,
-                     text="AC",
-                     command=on_clear,
-                     row=SPECIAL_BUTTONS["clear"]["row"],
-                     column=SPECIAL_BUTTONS["clear"]["column"],
-                     columnspan=SPECIAL_BUTTONS["clear"]["columnspan"])
+        self._buttons.update({
+            name: KeypadButton(parent, data["text"], data["value"], data["row"], data["column"], data["columnspan"])
+            for name, data in SPECIAL_BUTTONS.items()
+        })
 
-        # invert button
-        KeypadButton(self.keypad,
-                     text="+/-",
-                     command=on_invert,
-                     row=SPECIAL_BUTTONS["invert"]["row"],
-                     column=SPECIAL_BUTTONS["invert"]["column"],
-                     columnspan=SPECIAL_BUTTONS["invert"]["columnspan"])
+    def bind_number_operator_button(self, name: Enum, callback: Callable[[str], None]) -> None:
+        if name not in self._buttons:
+            raise KeyError(f"{name} button does not exist.")
 
-        # percent button
-        KeypadButton(self.keypad,
-                     text="%",
-                     command=on_percent,
-                     row=SPECIAL_BUTTONS["percent"]["row"],
-                     column=SPECIAL_BUTTONS["percent"]["column"],
-                     columnspan=SPECIAL_BUTTONS["percent"]["columnspan"])
+        button = self._buttons[name]
+        button.configure(command=lambda value=button.value:  callback(value))
 
-        # equal button
-        KeypadButton(self.keypad,
-                     text="=",
-                     command=on_evaluate,
-                     row=SPECIAL_BUTTONS["equal"]["row"],
-                     column=SPECIAL_BUTTONS["equal"]["column"],
-                     columnspan=SPECIAL_BUTTONS["equal"]["columnspan"])
+    def bind_special_button(self, name: Enum, callback: Callable[[], None]) -> None:
+        if name not in self._buttons:
+            raise KeyError(f"{name} button does not exist.")
 
-        self.equation_display.place(x=0, y=0, relwidth=1, relheight=0.15)
-        self.results_display.place(x=0, rely=0.15, relwidth=1, relheight=0.15)
-        self.keypad.place(x=0, rely=0.3, relwidth=1, relheight=0.7)
+        button = self._buttons[name]
+        button.configure(command=callback)
+
+    def update_ui(self, results: str, expression: str, ) -> None:
+        self._results_widget.update_display(results)
+        self._equation_widget.update_display(expression)

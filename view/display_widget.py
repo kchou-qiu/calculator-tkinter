@@ -1,17 +1,12 @@
 import customtkinter as ctk
 
 
-class ResultsDisplayWidget(ctk.CTkFrame):
-    def __init__(self, parent: ctk.CTk) -> None:
+class DisplayWidget(ctk.CTkFrame):
+    def __init__(self, parent: ctk.CTk, anchor: str, font: ctk.CTkFont) -> None:
         super().__init__(parent)
-
-        self.label = ctk.CTkLabel(self, text="OUTPUT", fg_color="#00ff00")
+        self._display = ctk.StringVar(self)
+        self.label = ctk.CTkLabel(self, textvariable=self._display, font=font, anchor=anchor)
         self.label.pack(expand=True, fill="both")
 
-
-class EquationDisplayWidget(ctk.CTkFrame):
-    def __init__(self, parent: ctk.CTk) -> None:
-        super().__init__(parent)
-
-        self.label = ctk.CTkLabel(self, text="EQUATION", fg_color="#ff0000")
-        self.label.pack(expand=True, fill="both")
+    def update_display(self, equation: str) -> None:
+        self._display.set(equation)

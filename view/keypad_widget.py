@@ -1,16 +1,24 @@
 import customtkinter as ctk
-from typing import Callable
 
 
 class KeypadButton(ctk.CTkButton):
     def __init__(self, parent: ctk.CTkFrame,
                  text: str = "",
-                 command: Callable[..., None] = None,
+                 value: str = "",
                  row: int = 0,
                  column: int = 0,
                  columnspan: int = 0) -> None:
-        super().__init__(parent, text=text, command=command)
+        super().__init__(parent, text=text)
+        self.value = value
         self.grid(row=row, column=column, columnspan=columnspan, sticky="NSEW")
+
+    @property
+    def value(self) -> str:
+        return self._value
+
+    @value.setter
+    def value(self, value: str) -> None:
+        self._value = value
 
 
 class KeypadWidget(ctk.CTkFrame):
