@@ -39,7 +39,7 @@ WINDOW_COLOR = ""
 KEY_ROWS = 5
 KEY_COLS = 4
 
-DEFAULT_RESULTS = 0
+DEFAULT_RESULTS = "0"
 DEFAULT_EQUATION = ""
 
 # button data and layout

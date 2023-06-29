@@ -10,6 +10,7 @@ class CalculatorController:
         self._bind_buttons()
 
         self.view.update_ui(DEFAULT_RESULTS, DEFAULT_EQUATION)
+        self.clear()
 
     def _bind_buttons(self):
         for number in NumberButtons:
@@ -26,6 +27,7 @@ class CalculatorController:
 
     def clear(self):
         self.model.clear()
+        self.update_ui()
 
     def invert(self):
         self.model.invert()
@@ -38,12 +40,18 @@ class CalculatorController:
 
     def add_number(self, number: str) -> None:
         self.model.add_number(number)
+        self.update_ui()
 
     def add_operator(self, operator: str) -> None:
         self.model.add_operator(operator)
+        self.update_ui()
 
     def evaluate(self) -> None:
         self.model.evaluate()
+        self.update_ui()
+
+    def update_ui(self):
+        self.view.update_ui(self.model.get_current_number(), self.model.get_equation())
 
     def run(self):
         self.view.mainloop()
