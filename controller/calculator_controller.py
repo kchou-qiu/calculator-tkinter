@@ -1,4 +1,4 @@
-from assets.config import NumberButtons, SpecialButtons, OperatorButtons, DEFAULT_RESULTS, DEFAULT_EQUATION
+from assets.config import NumberButtons, SpecialButtons, OperatorButtons
 from model.calculator_model import CalculatorModel
 from view.calculator_view import CalculatorView
 
@@ -8,8 +8,6 @@ class CalculatorController:
         self.model = model
         self.view = view
         self._bind_buttons()
-
-        self.view.update_ui(DEFAULT_RESULTS, DEFAULT_EQUATION)
         self.clear()
 
     def _bind_buttons(self):
@@ -20,7 +18,7 @@ class CalculatorController:
             self.view.bind_number_operator_button(operator, self.add_operator)
 
         self.view.bind_special_button(SpecialButtons.CLEAR, self.clear)
-        self.view.bind_special_button(SpecialButtons.INVERT, self.invert)
+        self.view.bind_special_button(SpecialButtons.NEGATE, self.negate)
         self.view.bind_special_button(SpecialButtons.PERCENT, self.percent)
         self.view.bind_special_button(SpecialButtons.DECIMAL, self.decimal)
         self.view.bind_special_button(SpecialButtons.EQUAL, self.evaluate)
@@ -29,16 +27,19 @@ class CalculatorController:
         self.model.clear()
         self.update_ui()
 
-    def invert(self):
-        self.model.invert()
+    def negate(self):
+        self.model.negate()
+        self.update_ui()
 
     def percent(self):
         self.model.percent()
+        self.update_ui()
 
     def decimal(self):
         self.model.decimal()
+        self.update_ui()
 
-    def add_number(self, number: str) -> None:
+    def add_number(self, number: int) -> None:
         self.model.add_number(number)
         self.update_ui()
 

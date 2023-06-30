@@ -23,7 +23,7 @@ class OperatorButtons(Enum):
 
 class SpecialButtons(Enum):
     CLEAR = 0
-    INVERT = 1
+    NEGATE = 1
     PERCENT = 2
     DECIMAL = 3
     EQUAL = 4
@@ -39,21 +39,18 @@ WINDOW_COLOR = ""
 KEY_ROWS = 5
 KEY_COLS = 4
 
-DEFAULT_RESULTS = "0"
-DEFAULT_EQUATION = ""
-
 # button data and layout
 NUMBER_BUTTONS = {
-    NumberButtons.SEVEN: {"row": 1, "column": 0, "columnspan": 1, "text": "7", "value": "7"},
-    NumberButtons.EIGHT: {"row": 1, "column": 1, "columnspan": 1, "text": "8", "value": "8"},
-    NumberButtons.NINE: {"row": 1, "column": 2, "columnspan": 1, "text": "9", "value": "9"},
-    NumberButtons.FOUR: {"row": 2, "column": 0, "columnspan": 1, "text": "4", "value": "4"},
-    NumberButtons.FIVE: {"row": 2, "column": 1, "columnspan": 1, "text": "5", "value": "5"},
-    NumberButtons.SIX: {"row": 2, "column": 2, "columnspan": 1, "text": "6", "value": "6"},
-    NumberButtons.ONE: {"row": 3, "column": 0, "columnspan": 1, "text": "1", "value": "1"},
-    NumberButtons.TWO: {"row": 3, "column": 1, "columnspan": 1, "text": "2", "value": "2"},
-    NumberButtons.THREE: {"row": 3, "column": 2, "columnspan": 1, "text": "3", "value": "3"},
-    NumberButtons.ZERO: {"row": 4, "column": 0, "columnspan": 2, "text": "0", "value": "0"},
+    NumberButtons.SEVEN: {"row": 1, "column": 0, "columnspan": 1, "text": "7", "value": 7},
+    NumberButtons.EIGHT: {"row": 1, "column": 1, "columnspan": 1, "text": "8", "value": 8},
+    NumberButtons.NINE: {"row": 1, "column": 2, "columnspan": 1, "text": "9", "value": 9},
+    NumberButtons.FOUR: {"row": 2, "column": 0, "columnspan": 1, "text": "4", "value": 4},
+    NumberButtons.FIVE: {"row": 2, "column": 1, "columnspan": 1, "text": "5", "value": 5},
+    NumberButtons.SIX: {"row": 2, "column": 2, "columnspan": 1, "text": "6", "value": 6},
+    NumberButtons.ONE: {"row": 3, "column": 0, "columnspan": 1, "text": "1", "value": 1},
+    NumberButtons.TWO: {"row": 3, "column": 1, "columnspan": 1, "text": "2", "value": 2},
+    NumberButtons.THREE: {"row": 3, "column": 2, "columnspan": 1, "text": "3", "value": 3},
+    NumberButtons.ZERO: {"row": 4, "column": 0, "columnspan": 2, "text": "0", "value": 0},
 }
 
 OPERATOR_BUTTONS = {
@@ -65,7 +62,7 @@ OPERATOR_BUTTONS = {
 
 SPECIAL_BUTTONS = {
     SpecialButtons.CLEAR: {"row": 0, "column": 0, "columnspan": 1, "text": "AC", "value": "Clear"},
-    SpecialButtons.INVERT: {"row": 0, "column": 1, "columnspan": 1, "text": "\u00b1", "value": "Invert"},
+    SpecialButtons.NEGATE: {"row": 0, "column": 1, "columnspan": 1, "text": "\u00b1", "value": "Invert"},
     SpecialButtons.PERCENT: {"row": 0, "column": 2, "columnspan": 1, "text": "%", "value": "Percentage"},
     SpecialButtons.EQUAL: {"row": 4, "column": 3, "columnspan": 1, "text": "=", "value": "Evaluate"},
     SpecialButtons.DECIMAL: {"row": 4, "column": 2, "columnspan": 1, "text": ".", "value": "Decimal"}
