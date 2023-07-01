@@ -10,7 +10,7 @@ from assets.config import *
 
 class CalculatorView(ctk.CTk):
     def __init__(self):
-        super().__init__(fg_color=COLORS["dark-gray"])
+        super().__init__(fg_color=COLOR_FOREGROUND)
         self._buttons = {}
 
         # display widgets
@@ -36,20 +36,50 @@ class CalculatorView(ctk.CTk):
         self._keypad_widget.place(x=0, rely=0.3, relwidth=1, relheight=0.7)
 
     def _create_buttons(self, parent: ctk.CTkFrame) -> None:
+        font_main = ctk.CTkFont(family=FONT_FAMILY, size=FONT_SIZE_BUTTONS_1)
+        font_secondary = ctk.CTkFont(family=FONT_FAMILY, size=FONT_SIZE_BUTTONS_2)
+        font_tertiary = ctk.CTkFont(family=FONT_FAMILY, size=FONT_SIZE_BUTTONS_3)
+
         self._buttons.update({
-            name: KeypadButton(parent, data["text"], data["value"], data["row"], data["column"], data["columnspan"])
+            name: KeypadButton(parent,
+                               COLOR_BUTTON_NUMBERS,
+                               data["text"],
+                               data["value"],
+                               data["row"],
+                               data["column"],
+                               data["columnspan"],
+                               font_main)
             for name, data in NUMBER_BUTTONS.items()
         })
 
         self._buttons.update({
-            name: KeypadButton(parent, data["text"], data["value"], data["row"], data["column"], data["columnspan"])
+            name: KeypadButton(parent,
+                               COLOR_BUTTON_OPERATOR,
+                               data["text"],
+                               data["value"],
+                               data["row"],
+                               data["column"],
+                               data["columnspan"],
+                               font_main)
             for name, data in OPERATOR_BUTTONS.items()
         })
 
         self._buttons.update({
-            name: KeypadButton(parent, data["text"], data["value"], data["row"], data["column"], data["columnspan"])
+            name: KeypadButton(parent,
+                               COLOR_BUTTON_SPECIAL,
+                               data["text"],
+                               data["value"],
+                               data["row"],
+                               data["column"],
+                               data["columnspan"],
+                               font_main)
             for name, data in SPECIAL_BUTTONS.items()
         })
+
+        self._buttons[SpecialButtons.DECIMAL].configure(fg_color=COLOR_BUTTON_NUMBERS)
+        self._buttons[SpecialButtons.EQUAL].configure(fg_color=COLOR_BUTTON_EXTRA)
+        self._buttons[OperatorButtons.DIVISION].configure(font=font_secondary)
+        self._buttons[OperatorButtons.SUBTRACTION].configure(font=font_tertiary)
 
     def bind_number_operator_button(self, name: Enum, callback: Callable[[str], None]) -> None:
         if name not in self._buttons:

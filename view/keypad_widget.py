@@ -1,24 +1,36 @@
 import customtkinter as ctk
 
+from assets.styling import COLOR_FOREGROUND, BUTTON_CORNER_RADIUS, BUTTON_PAD_X, BUTTON_PAD_Y
+
 
 class KeypadButton(ctk.CTkButton):
-    def __init__(self, parent: ctk.CTkFrame,
+    def __init__(self,
+                 parent: ctk.CTkFrame,
+                 fg_color,
                  text: str = "",
                  value: str = "",
                  row: int = 0,
                  column: int = 0,
-                 columnspan: int = 0) -> None:
-        super().__init__(parent, text=text)
-        self.value = value
-        self.grid(row=row, column=column, columnspan=columnspan, sticky="NSEW")
+                 columnspan: int = 0,
+                 font: ctk.CTkFont = None) -> None:
+        super().__init__(parent, text=text,
+                         fg_color=fg_color,
+                         corner_radius=BUTTON_CORNER_RADIUS,
+                         border_color=COLOR_FOREGROUND)
+        self._value = value
+        self.grid(row=row,
+                  column=column,
+                  columnspan=columnspan,
+                  sticky="NSEW",
+                  padx=BUTTON_PAD_X,
+                  pady=BUTTON_PAD_Y)
+
+        if font:
+            self.configure(font=font)
 
     @property
     def value(self) -> str:
         return self._value
-
-    @value.setter
-    def value(self, value: str) -> None:
-        self._value = value
 
 
 class KeypadWidget(ctk.CTkFrame):
