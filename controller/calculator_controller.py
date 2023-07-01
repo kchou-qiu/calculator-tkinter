@@ -39,7 +39,7 @@ class CalculatorController:
         self.model.decimal()
         self.update_ui()
 
-    def add_number(self, number: int) -> None:
+    def add_number(self, number: str) -> None:
         self.model.add_number(number)
         self.update_ui()
 
@@ -48,11 +48,11 @@ class CalculatorController:
         self.update_ui()
 
     def evaluate(self) -> None:
-        self.model.evaluate()
+        self.model.equal()
         self.update_ui()
 
     def update_ui(self):
-        self.view.update_ui(self.model.get_current_number(), self.model.get_equation())
+        self.view.update_ui(self.model.get_result(), self.model.get_equation())
 
     def run(self):
         self.view.mainloop()

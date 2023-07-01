@@ -1,57 +1,107 @@
 class CalculatorModel:
     def __init__(self):
         self._index = 0
-        self._operands = [0.0, 0.0]
+        self._operands = ["0", ""]
         self._operator = ""
-        self._evaluated = False
+        self._current = self._operands[self._index]
+        self._equation = ""
+        self._clear_next_input = True
 
-    @classmethod
-    def _remove_decimal_if_whole(cls, number: float) -> float:
-        return round(number) if number.is_integer() else number
+    @staticmethod
+    def evaluate(left: str, right: str, operator: str) -> str:
+        return str(eval(f"{left}{operator}{right}"))
+
+    @staticmethod
+    def clean_decimal(number: str) -> str:
+        if number.endswith("."):
+            number += "0"
+        converted = float(number)
+        return str(int(converted)) if converted.is_integer() else number
 
     def get_equation(self) -> str:
-        if self._operands[0] == 0:
-            return ""
+        return self._equation
 
-        equation = f"{CalculatorModel._remove_decimal_if_whole(self._operands[0])}"
+    def _set_equation(self, left: str = "", right: str = "", operator: str = "", is_evaluated: bool = False):
+        self._equation = ""
 
-        if self._operator:
-            equation += f" {self._operator}"
+        if left:
+            self._equation += f"{self.clean_decimal(left)}"
 
-        if self._operands[1] != 0:
-            equation += f" {CalculatorModel._remove_decimal_if_whole(self._operands[1])}"
+        if operator:
+            self._equation += f" {operator}"
 
-        return equation
+        if right:
+            self._equation += f" {self.clean_decimal(right)}"
 
-    def get_current_number(self) -> float:
-        return self._remove_decimal_if_whole(self._operands[self._index])
+        if is_evaluated:
+            self._equation += " ="
+
+    def get_result(self) -> str:
+        return self._current
 
     def clear(self) -> None:
         self._index = 0
-        self._operands[0] = 0.0
-        self._operands[1] = 0.0
+        self._operands = ["0", ""]
         self._operator = ""
+        self._current = self._operands[self._index]
+        self._set_equation()
+        self._clear_next_input = True
 
     def negate(self):
-        self._operands[self._index] *= -1
+        if self._current and self._current != "0":
+            if self._current[0] != "-":
+                self._current = "-" + self._current[:]
+            else:
+                self._current = self._current[1:]
+
+            self._operands[self._index] = self._current
 
     def percent(self):
-        self._operands[self._index] /= 100
+        if self._current and self._current != "0":
+            if self._current.endswith("."):
+                self._current += "0"
+
+            self._operands[self._index] = str(float(self._current) / 100)
+            self._current = self.clean_decimal(self._operands[self._index])
 
     def decimal(self):
-        if self._operands[self._index] > 0:
-            self._operands[self._index] = (self._operands[self._index] * 10) / 10
+        if self._clear_next_input:
+            self._clear_next_input = False
+            self._operands[0] = "0"
+            self._current = "0."
+        elif float(self._current).is_integer() and not self._current == "0.":
+            self._operands[self._index] += "."
+            self._current = self._operands[self._index]
 
-    def add_number(self, number: int) -> None:
-        self._operands[self._index] = (self._operands[self._index] * 10) + number
+    def add_number(self, number: str) -> None:
+        if self._clear_next_input:
+            self._current = number
+            self._clear_next_input = False
+        else:
+            self._current += number
+
+        self._operands[self._index] = self._current
 
     def add_operator(self, operator: str) -> None:
+        if self._clear_next_input:
+            self._operands[1] = ""
+        elif self._operator and self._operands[1]:
+            # make space for new expression by first evaluating previous expression
+            self._operands[0] = self.evaluate(self._operands[0], self._operands[1], operator)
+            self._operands[1] = ""
+
         self._operator = operator
         self._index = (self._index + 1) % len(self._operands)
+        self._set_equation(self._operands[0], operator=operator)
+        self._clear_next_input = True
 
-    def evaluate(self) -> None:
-        self._operands[0] = eval(f"{self._operands[0]}{self._operator}{self._operands[1]}")
-        self._operands[1] = 0.0
+    def equal(self) -> None:
+        # if second operand not given, treat it as shortcut to duplicate first operand
+        if self._operator and not self._operands[1]:
+            self._operands[1] = self._operands[0]
+
+        self._set_equation(self._operands[0], self._operands[1], self._operator, True)
+        self._operands[0] = self.evaluate(self._operands[0], self._operands[1], self._operator)
+        self._current = self.clean_decimal(self._operands[0])
         self._index = 0
-        self._operator = ""
-        self._evaluated = True
+        self._clear_next_input = True

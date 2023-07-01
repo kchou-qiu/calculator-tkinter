@@ -41,16 +41,16 @@ KEY_COLS = 4
 
 # button data and layout
 NUMBER_BUTTONS = {
-    NumberButtons.SEVEN: {"row": 1, "column": 0, "columnspan": 1, "text": "7", "value": 7},
-    NumberButtons.EIGHT: {"row": 1, "column": 1, "columnspan": 1, "text": "8", "value": 8},
-    NumberButtons.NINE: {"row": 1, "column": 2, "columnspan": 1, "text": "9", "value": 9},
-    NumberButtons.FOUR: {"row": 2, "column": 0, "columnspan": 1, "text": "4", "value": 4},
-    NumberButtons.FIVE: {"row": 2, "column": 1, "columnspan": 1, "text": "5", "value": 5},
-    NumberButtons.SIX: {"row": 2, "column": 2, "columnspan": 1, "text": "6", "value": 6},
-    NumberButtons.ONE: {"row": 3, "column": 0, "columnspan": 1, "text": "1", "value": 1},
-    NumberButtons.TWO: {"row": 3, "column": 1, "columnspan": 1, "text": "2", "value": 2},
-    NumberButtons.THREE: {"row": 3, "column": 2, "columnspan": 1, "text": "3", "value": 3},
-    NumberButtons.ZERO: {"row": 4, "column": 0, "columnspan": 2, "text": "0", "value": 0},
+    NumberButtons.SEVEN: {"row": 1, "column": 0, "columnspan": 1, "text": "7", "value": "7"},
+    NumberButtons.EIGHT: {"row": 1, "column": 1, "columnspan": 1, "text": "8", "value": "8"},
+    NumberButtons.NINE: {"row": 1, "column": 2, "columnspan": 1, "text": "9", "value": "9"},
+    NumberButtons.FOUR: {"row": 2, "column": 0, "columnspan": 1, "text": "4", "value": "4"},
+    NumberButtons.FIVE: {"row": 2, "column": 1, "columnspan": 1, "text": "5", "value": "5"},
+    NumberButtons.SIX: {"row": 2, "column": 2, "columnspan": 1, "text": "6", "value": "6"},
+    NumberButtons.ONE: {"row": 3, "column": 0, "columnspan": 1, "text": "1", "value": "1"},
+    NumberButtons.TWO: {"row": 3, "column": 1, "columnspan": 1, "text": "2", "value": "2"},
+    NumberButtons.THREE: {"row": 3, "column": 2, "columnspan": 1, "text": "3", "value": "3"},
+    NumberButtons.ZERO: {"row": 4, "column": 0, "columnspan": 2, "text": "0", "value": "0"},
 }
 
 OPERATOR_BUTTONS = {
