@@ -112,8 +112,13 @@ class CalculatorModel:
         self._set_equation(self._operands[0], self._operands[1], self._operator, True)
 
         # evaluate expression then clear out previous values
-        self._operands[0] = self.evaluate(self._operands[0], self._operands[1], self._operator)
-        self._index = 0
-        self._current = self.clean_decimal(self._operands[0])
-        self._clear_next_input = True
-        self._was_evaluated = True
+        try:
+            self._operands[0] = self.evaluate(self._operands[0], self._operands[1], self._operator)
+        except ZeroDivisionError:
+            self.clear()
+            raise ZeroDivisionError
+        else:
+            self._index = 0
+            self._current = self.clean_decimal(self._operands[0])
+            self._clear_next_input = True
+            self._was_evaluated = True

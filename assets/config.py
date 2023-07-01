@@ -67,3 +67,6 @@ SPECIAL_BUTTONS = {
     SpecialButtons.EQUAL: {"row": 4, "column": 3, "columnspan": 1, "text": "=", "value": "Evaluate"},
     SpecialButtons.DECIMAL: {"row": 4, "column": 2, "columnspan": 1, "text": ".", "value": "Decimal"}
 }
+
+# ERRORS
+ZERO_DIVISION = "ERROR"

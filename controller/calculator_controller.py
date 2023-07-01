@@ -1,4 +1,4 @@
-from assets.config import NumberButtons, SpecialButtons, OperatorButtons
+from assets.config import NumberButtons, SpecialButtons, OperatorButtons, ZERO_DIVISION
 from model.calculator_model import CalculatorModel
 from view.calculator_view import CalculatorView
 
@@ -48,8 +48,12 @@ class CalculatorController:
         self.update_ui()
 
     def evaluate(self) -> None:
-        self.model.equal()
-        self.update_ui()
+        try:
+            self.model.equal()
+        except ZeroDivisionError:
+            self.view.update_ui(ZERO_DIVISION, "")
+        else:
+            self.update_ui()
 
     def update_ui(self):
         self.view.update_ui(self.model.get_result(), self.model.get_equation())
