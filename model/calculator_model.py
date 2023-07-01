@@ -6,6 +6,7 @@ class CalculatorModel:
         self._current = self._operands[self._index]
         self._equation = ""
         self._clear_next_input = True
+        self._was_evaluated = True
 
     @staticmethod
     def evaluate(left: str, right: str, operator: str) -> str:
@@ -46,6 +47,7 @@ class CalculatorModel:
         self._current = self._operands[self._index]
         self._set_equation()
         self._clear_next_input = True
+        self._was_evaluated = True
 
     def negate(self):
         if self._current and self._current != "0":
@@ -66,42 +68,52 @@ class CalculatorModel:
 
     def decimal(self):
         if self._clear_next_input:
-            self._clear_next_input = False
             self._operands[0] = "0"
             self._current = "0."
+            self._clear_next_input = False
         elif float(self._current).is_integer() and not self._current == "0.":
+            # allow only one decimal to be added an operand
             self._operands[self._index] += "."
             self._current = self._operands[self._index]
 
     def add_number(self, number: str) -> None:
         if self._clear_next_input:
-            self._current = number
             self._clear_next_input = False
+            self._current = number
         else:
             self._current += number
 
         self._operands[self._index] = self._current
 
     def add_operator(self, operator: str) -> None:
-        if self._clear_next_input:
+        if self._clear_next_input or self._was_evaluated:
             self._operands[1] = ""
+            self._was_evaluated = False
         elif self._operator and self._operands[1]:
-            # make space for new expression by first evaluating previous expression
+            # make space for new expression by evaluating previous expression
             self._operands[0] = self.evaluate(self._operands[0], self._operands[1], operator)
             self._operands[1] = ""
 
-        self._operator = operator
-        self._index = (self._index + 1) % len(self._operands)
-        self._set_equation(self._operands[0], operator=operator)
         self._clear_next_input = True
+
+        # build partial equation that can be displayed
+        self._set_equation(self._operands[0], operator=operator)
+        self._operator = operator
+
+        # moves operand pointer to next element or loop back to first
+        self._index = (self._index + 1) % len(self._operands)
 
     def equal(self) -> None:
         # if second operand not given, treat it as shortcut to duplicate first operand
         if self._operator and not self._operands[1]:
             self._operands[1] = self._operands[0]
 
+        # store equation before overwriting
         self._set_equation(self._operands[0], self._operands[1], self._operator, True)
+
+        # evaluate expression then clear out previous values
         self._operands[0] = self.evaluate(self._operands[0], self._operands[1], self._operator)
-        self._current = self.clean_decimal(self._operands[0])
         self._index = 0
+        self._current = self.clean_decimal(self._operands[0])
         self._clear_next_input = True
+        self._was_evaluated = True

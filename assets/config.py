@@ -31,7 +31,7 @@ class SpecialButtons(Enum):
 
 # window
 APP_TITLE = "Calculator"
-WINDOW_WIDTH = 400
+WINDOW_WIDTH = 450
 WINDOW_HEIGHT = 600
 WINDOW_COLOR = ""
 
