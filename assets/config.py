@@ -33,11 +33,15 @@ class SpecialButtons(Enum):
 APP_TITLE = "Calculator"
 WINDOW_WIDTH = 400
 WINDOW_HEIGHT = 600
-WINDOW_COLOR = ""
 
 # grid layout for keypad
 KEY_ROWS = 5
 KEY_COLS = 4
+
+# display
+PRECISION = 5               # max decimal places for a number
+MAX_CHARACTER_DISPLAY = 10  # max numbers shown on display for a number
+ZERO_DIVISION = "ERROR"
 
 # button data and layout
 NUMBER_BUTTONS = {
@@ -67,6 +71,3 @@ SPECIAL_BUTTONS = {
     SpecialButtons.EQUAL: {"row": 4, "column": 3, "columnspan": 1, "text": "=", "value": "Evaluate"},
     SpecialButtons.DECIMAL: {"row": 4, "column": 2, "columnspan": 1, "text": ".", "value": "Decimal"}
 }
-
-# ERRORS
-ZERO_DIVISION = "ERROR"

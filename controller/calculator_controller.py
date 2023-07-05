@@ -1,4 +1,4 @@
-from assets.config import NumberButtons, SpecialButtons, OperatorButtons, ZERO_DIVISION
+from assets.config import NumberButtons, SpecialButtons, OperatorButtons, ZERO_DIVISION, MAX_CHARACTER_DISPLAY, PRECISION
 from model.calculator_model import CalculatorModel
 from view.calculator_view import CalculatorView
 
@@ -9,6 +9,17 @@ class CalculatorController:
         self.view = view
         self._bind_buttons()
         self.clear()
+
+    @staticmethod
+    def format_number(number: str) -> str:
+        if not number:
+            return number
+
+        # must change "x." -> "x.0" before it can be converted to a number
+        if number.endswith("."):
+            number += "0"
+
+        return f"{float(number):{MAX_CHARACTER_DISPLAY}.{PRECISION}g}".lstrip(" ")
 
     def _bind_buttons(self):
         for number in NumberButtons:
@@ -25,27 +36,27 @@ class CalculatorController:
 
     def clear(self):
         self.model.clear()
-        self.update_ui()
+        self._update_ui(False, False)
 
     def negate(self):
         self.model.negate()
-        self.update_ui()
+        self._update_ui(False)
 
     def percent(self):
         self.model.percent()
-        self.update_ui()
+        self._update_ui()
 
     def decimal(self):
         self.model.decimal()
-        self.update_ui()
+        self._update_ui(False)
 
     def add_number(self, number: str) -> None:
         self.model.add_number(number)
-        self.update_ui()
+        self._update_ui(False)
 
     def add_operator(self, operator: str) -> None:
         self.model.add_operator(operator)
-        self.update_ui()
+        self._update_ui()
 
     def evaluate(self) -> None:
         try:
@@ -53,10 +64,20 @@ class CalculatorController:
         except ZeroDivisionError:
             self.view.update_ui(ZERO_DIVISION, "")
         else:
-            self.update_ui()
+            self._update_ui()
 
-    def update_ui(self):
-        self.view.update_ui(self.model.get_result(), self.model.get_equation())
+    def _update_ui(self, format_result: bool = True, format_equation: bool = True) -> None:
+        result = self.model.get_result()
+        left, right, operator = self.model.get_equation()
+
+        if format_result:
+            result = self.format_number(result)
+
+        if format_equation:
+            left = self.format_number(left)
+            right = self.format_number(right)
+
+        self.view.update_ui(result, f"{left} {operator} {right}")
 
     def run(self):
         self.view.mainloop()

@@ -1,41 +1,34 @@
+from typing import Tuple
+
+from assets.config import MAX_CHARACTER_DISPLAY
+
+
 class CalculatorModel:
     def __init__(self):
         self._index = 0
         self._operands = ["0", ""]
         self._operator = ""
         self._current = self._operands[self._index]
-        self._equation = ""
         self._clear_next_input = True
         self._was_evaluated = True
+
+        # current, operands, and operator are subject to change and may not reflect original equation
+        # store copy of original operands and operator, so equation can be reassembled in the future
+        self._equation_left = ""
+        self._equation_right = ""
+        self._equation_operator = ""
 
     @staticmethod
     def evaluate(left: str, right: str, operator: str) -> str:
         return str(eval(f"{left}{operator}{right}"))
 
-    @staticmethod
-    def clean_decimal(number: str) -> str:
-        if number.endswith("."):
-            number += "0"
-        converted = float(number)
-        return str(int(converted)) if converted.is_integer() else number
+    def get_equation(self) -> Tuple[str, str, str]:
+        return self._equation_left, self._equation_right, self._equation_operator
 
-    def get_equation(self) -> str:
-        return self._equation
-
-    def _set_equation(self, left: str = "", right: str = "", operator: str = "", is_evaluated: bool = False):
-        self._equation = ""
-
-        if left:
-            self._equation += f"{self.clean_decimal(left)}"
-
-        if operator:
-            self._equation += f" {operator}"
-
-        if right:
-            self._equation += f" {self.clean_decimal(right)}"
-
-        if is_evaluated:
-            self._equation += " ="
+    def _set_equation(self, left: str = "", right: str = "", operator: str = ""):
+        self._equation_left = left
+        self._equation_right = right
+        self._equation_operator = operator
 
     def get_result(self) -> str:
         return self._current
@@ -60,19 +53,20 @@ class CalculatorModel:
 
     def percent(self):
         if self._current and self._current != "0":
+            # adjusting for when user's enter any "x." type inputs
             if self._current.endswith("."):
                 self._current += "0"
 
             self._operands[self._index] = str(float(self._current) / 100)
-            self._current = self.clean_decimal(self._operands[self._index])
+            self._current = self._operands[self._index]
 
     def decimal(self):
         if self._clear_next_input:
-            self._operands[0] = "0"
+            self._operands[self._index] = "0"
             self._current = "0."
             self._clear_next_input = False
         elif float(self._current).is_integer() and not self._current == "0.":
-            # allow only one decimal to be added an operand
+            # check to ensure decimal can only be added once
             self._operands[self._index] += "."
             self._current = self._operands[self._index]
 
@@ -80,7 +74,7 @@ class CalculatorModel:
         if self._clear_next_input:
             self._clear_next_input = False
             self._current = number
-        else:
+        elif len(self._current) < MAX_CHARACTER_DISPLAY:
             self._current += number
 
         self._operands[self._index] = self._current
@@ -90,17 +84,18 @@ class CalculatorModel:
             self._operands[1] = ""
             self._was_evaluated = False
         elif self._operator and self._operands[1]:
-            # make space for new expression by evaluating previous expression
-            self._operands[0] = self.evaluate(self._operands[0], self._operands[1], operator)
+            # make space for new operator by evaluating previous expression
+            self._operands[0] = self.evaluate(self._operands[0], self._operands[1], self._operator)
             self._operands[1] = ""
+            self._current = self._operands[0]
+            # important to reset index to 0 otherwise index will become unaligned
+            self._index = 0
 
         self._clear_next_input = True
-
-        # build partial equation that can be displayed
         self._set_equation(self._operands[0], operator=operator)
         self._operator = operator
 
-        # moves operand pointer to next element or loop back to first
+        # moves operand pointer to next operand or loop back to first
         self._index = (self._index + 1) % len(self._operands)
 
     def equal(self) -> None:
@@ -108,17 +103,16 @@ class CalculatorModel:
         if self._operator and not self._operands[1]:
             self._operands[1] = self._operands[0]
 
-        # store equation before overwriting
-        self._set_equation(self._operands[0], self._operands[1], self._operator, True)
+        self._set_equation(self._operands[0], self._operands[1], self._operator)
 
-        # evaluate expression then clear out previous values
         try:
             self._operands[0] = self.evaluate(self._operands[0], self._operands[1], self._operator)
         except ZeroDivisionError:
             self.clear()
             raise ZeroDivisionError
         else:
+            # keep previous operator and second operand to allow user to press "=" consecutively
             self._index = 0
-            self._current = self.clean_decimal(self._operands[0])
+            self._current = self._operands[0]
             self._clear_next_input = True
             self._was_evaluated = True

@@ -1,12 +1,18 @@
+# layout
+EQUATION_LAYOUT = {"x": 0, "y": 0, "relwidth": 1, "relheight": 0.15}
+RESULTS_LAYOUT = {"x": 0, "rely": 0.15, "relwidth": 1, "relheight": 0.15}
+KEYPAD_LAYOUT = {"x": 0, "rely": 0.3, "relwidth": 1, "relheight": 0.7}
+
+# fonts
 FONT_FAMILY = "Helvetica"
 FONT_SIZE_DISPLAY_RESULTS = 60
-FONT_SIZE_DISPLAY_EQUATION = 30
+FONT_SIZE_DISPLAY_EQUATION = 20
 FONT_SIZE_BUTTONS_1 = 25
 FONT_SIZE_BUTTONS_2 = 30
 FONT_SIZE_BUTTONS_3 = 45
 
+# general styling
 DISPLAY_PADDING_MAIN = 10
-
 BUTTON_CORNER_RADIUS = 50
 BUTTON_PAD_X = 1
 BUTTON_PAD_Y = 1

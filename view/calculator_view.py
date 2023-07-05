@@ -31,9 +31,9 @@ class CalculatorView(ctk.CTk):
         self.resizable(False, False)
 
         # master ui layout
-        self._equation_widget.place(x=0, y=0, relwidth=1, relheight=0.15)
-        self._results_widget.place(x=0, rely=0.15, relwidth=1, relheight=0.15)
-        self._keypad_widget.place(x=0, rely=0.3, relwidth=1, relheight=0.7)
+        self._equation_widget.place(**EQUATION_LAYOUT)
+        self._results_widget.place(**RESULTS_LAYOUT)
+        self._keypad_widget.place(**KEYPAD_LAYOUT)
 
     def _create_buttons(self, parent: ctk.CTkFrame) -> None:
         font_main = ctk.CTkFont(family=FONT_FAMILY, size=FONT_SIZE_BUTTONS_1)
@@ -95,6 +95,6 @@ class CalculatorView(ctk.CTk):
         button = self._buttons[name]
         button.configure(command=callback)
 
-    def update_ui(self, results: str, expression: str, ) -> None:
+    def update_ui(self, results: str, expression: str) -> None:
         self._results_widget.update_display(results)
         self._equation_widget.update_display(expression)
