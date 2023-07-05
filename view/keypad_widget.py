@@ -4,6 +4,9 @@ from assets.styling import COLOR_FOREGROUND, BUTTON_CORNER_RADIUS, BUTTON_PAD_X,
 
 
 class KeypadButton(ctk.CTkButton):
+    """
+    A button of the keypad.
+    """
     def __init__(self,
                  parent: ctk.CTkFrame,
                  fg_color,
@@ -30,10 +33,21 @@ class KeypadButton(ctk.CTkButton):
 
     @property
     def value(self) -> str:
+        """
+        Gets the value of the button.
+
+        Returns
+        -------
+        str
+            The value of the button.
+        """
         return self._value
 
 
 class KeypadWidget(ctk.CTkFrame):
+    """
+    An empty keypad widget with a set grid layout.
+    """
     def __init__(self, parent: ctk.CTk, max_rows: int, max_columns: int) -> None:
         super().__init__(parent)
 

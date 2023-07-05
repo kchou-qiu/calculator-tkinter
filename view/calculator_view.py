@@ -9,6 +9,10 @@ from assets.config import *
 
 
 class CalculatorView(ctk.CTk):
+    """The view component of the calculator.
+
+    GUI that handles displaying the user's button presses and calculations.
+    """
     def __init__(self):
         super().__init__(fg_color=COLOR_FOREGROUND)
         self._buttons = {}
@@ -23,6 +27,14 @@ class CalculatorView(ctk.CTk):
         self._create_buttons(self._keypad_widget)
 
     def _create_ui(self) -> None:
+        """
+        Creates the parent layout for the user interface.
+
+        Returns
+        -------
+        None
+
+        """
         # window setup
         self.title(APP_TITLE)
         self.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}"
@@ -36,6 +48,18 @@ class CalculatorView(ctk.CTk):
         self._keypad_widget.place(**KEYPAD_LAYOUT)
 
     def _create_buttons(self, parent: ctk.CTkFrame) -> None:
+        """
+        Creates the buttons for the keypad.
+
+        Parameters
+        ----------
+        parent: ctk.CTkFrame
+            The parent frame to place the buttons inside.
+
+        Returns
+        -------
+        None
+        """
         font_main = ctk.CTkFont(family=FONT_FAMILY, size=FONT_SIZE_BUTTONS_1)
         font_secondary = ctk.CTkFont(family=FONT_FAMILY, size=FONT_SIZE_BUTTONS_2)
         font_tertiary = ctk.CTkFont(family=FONT_FAMILY, size=FONT_SIZE_BUTTONS_3)
@@ -82,6 +106,21 @@ class CalculatorView(ctk.CTk):
         self._buttons[OperatorButtons.SUBTRACTION].configure(font=font_tertiary)
 
     def bind_number_operator_button(self, name: Enum, callback: Callable[[str], None]) -> None:
+        """
+        Binds a callback function to the given number and operator button.
+
+        Parameters
+        ----------
+        name: Enum
+            The name of the button to bind the callback function to.
+        callback: Callable[[str], None]
+            The callback function to be executed when the button is clicked. The function takes in a single string
+            argument which represents the button's value.
+
+        Returns
+        -------
+        None
+        """
         if name not in self._buttons:
             raise KeyError(f"{name} button does not exist.")
 
@@ -89,12 +128,40 @@ class CalculatorView(ctk.CTk):
         button.configure(command=lambda value=button.value:  callback(value))
 
     def bind_special_button(self, name: Enum, callback: Callable[[], None]) -> None:
+        """
+        Binds a callback function to the given special button.
+
+        Parameters
+        ----------
+        name: Enum
+            The name of the button to bind the callback function to.
+        callback: Callable[[], None]
+            The callback function to be executed when the button is clicked.
+
+        Returns
+        -------
+        None
+        """
         if name not in self._buttons:
             raise KeyError(f"{name} button does not exist.")
 
         button = self._buttons[name]
         button.configure(command=callback)
 
-    def update_ui(self, results: str, expression: str) -> None:
+    def update_ui(self, results: str, equation: str) -> None:
+        """
+        Updates the result and equation display.
+
+        Parameters
+        ----------
+        results: str
+            The results to be displayed.
+        equation: str
+            The full or partial equation to be displayed.
+
+        Returns
+        -------
+        None
+        """
         self._results_widget.update_display(results)
-        self._equation_widget.update_display(expression)
+        self._equation_widget.update_display(equation)

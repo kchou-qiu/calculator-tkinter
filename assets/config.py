@@ -1,6 +1,7 @@
 from enum import Enum
 
 
+# names for all buttons
 class NumberButtons(Enum):
     ZERO = 0
     ONE = 1
