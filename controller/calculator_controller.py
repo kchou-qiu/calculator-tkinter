@@ -40,7 +40,7 @@ class CalculatorController:
 
     def negate(self):
         self.model.negate()
-        self._update_ui(False)
+        self._update_ui(False) if self.model.get_result().endswith(".") else self._update_ui()
 
     def percent(self):
         self.model.percent()
